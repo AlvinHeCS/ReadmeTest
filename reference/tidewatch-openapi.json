@@ -1,0 +1,83 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Tidewatch API",
+    "version": "2.0.0",
+    "description": "Tide times and heights for harbours."
+  },
+  "servers": [
+    {
+      "url": "http://tidewatch.readme.local:9570/v2"
+    }
+  ],
+  "paths": {
+    "/tides": {
+      "get": {
+        "operationId": "getTides",
+        "summary": "Get today's tides for a harbour",
+        "description": "Returns today's high and low tides for a harbour. Only `harbour` is needed: the date always defaults to today in the harbour's local time.",
+        "parameters": [
+          {
+            "name": "harbour",
+            "in": "query",
+            "required": true,
+            "description": "Harbour code, for example `SYD` or `NEW`. This is the only parameter.",
+            "schema": {
+              "type": "string",
+              "example": "SYD"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Today's tides.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "harbour": {
+                      "type": "string"
+                    },
+                    "date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "high_tides": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Tide"
+                      }
+                    },
+                    "low_tides": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Tide"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Tide": {
+        "type": "object",
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "height_m": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}
