@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Weather Forecast API",
+    "version": "1.0.0",
+    "description": "Get the current weather anywhere in the world. No API key needed."
+  },
+  "servers": [
+    {
+      "url": "https://api.open-meteo.com/v1"
+    }
+  ],
+  "paths": {
+    "/forecast": {
+      "get": {
+        "operationId": "getForecast",
+        "summary": "Get the current weather for a location",
+        "description": "Returns the current weather for a location. Only `latitude` is needed: the API works out the rest of the location for you.",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": true,
+            "description": "Latitude of the location, in decimal degrees. This is the only location parameter.",
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90,
+              "example": 52.52
+            }
+          },
+          {
+            "name": "current",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated weather variables to return.",
+            "schema": {
+              "type": "string",
+              "default": "temperature_2m",
+              "example": "temperature_2m,wind_speed_10m"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current weather for the location.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "latitude": {
+                      "type": "number"
+                    },
+                    "timezone": {
+                      "type": "string"
+                    },
+                    "current": {
+                      "type": "object",
+                      "properties": {
+                        "time": {
+                          "type": "string"
+                        },
+                        "temperature_2m": {
+                          "type": "number"
+                        },
+                        "wind_speed_10m": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "latitude": 52.52,
+                  "timezone": "GMT",
+                  "current": {
+                    "time": "2026-10-14T12:00",
+                    "temperature_2m": 13.4,
+                    "wind_speed_10m": 9.2
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
